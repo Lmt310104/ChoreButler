@@ -1,3 +1,4 @@
 {"level":"info","time":1742051475,"caller":"D:/pet-project/ChoreButler/backend/main.go:62","message":"Listening and serving HTTP on :8080"}
 {"level":"info","time":1742051773,"caller":"D:/pet-project/ChoreButler/backend/main.go:67","message":"Listening and serving HTTP on :8080"}
 {"level":"info","time":1742051809,"caller":"D:/pet-project/ChoreButler/backend/main.go:67","message":"Listening and serving HTTP on :8080"}
+{"level":"info","time":1742125106,"caller":"D:/pet-project/ChoreButler/backend/main.go:67","message":"Listening and serving HTTP on :8080"}
