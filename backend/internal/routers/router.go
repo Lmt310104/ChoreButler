@@ -2,6 +2,7 @@ package routers
 
 import (
 	docs "chorebutler/docs"
+	"chorebutler/internal/service"
 	"chorebutler/pkg/utils"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,10 @@ type APIServer struct {
 	Router   *gin.Engine
 	Validate *validator.Validate
 	Cfg      utils.Config
+	Service  *service.ServiceContainer
 }
 
-func NewApiServer(Validator *validator.Validate, config utils.Config) (*APIServer, error) {
+func NewApiServer(Validator *validator.Validate, config utils.Config, service *service.ServiceContainer) (*APIServer, error) {
 	r := gin.Default()
 	if config.GinMode != "release" {
 		r.Use(cors.New(cors.Config{
@@ -33,9 +35,11 @@ func NewApiServer(Validator *validator.Validate, config utils.Config) (*APIServe
 		r,
 		Validator,
 		config,
+		service,
 	}, nil
 }
 
+// setupBasicRoutes sets up the basic routes for the API server
 func setupBasicRoutes(r *gin.Engine) {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -54,6 +58,7 @@ func (server *APIServer) Start(address string) error {
 }
 
 func (server *APIServer) SetupRouter() {
+	SetupAuthAdminRouter(server.Router.Group("/admin/auth"), server)
 }
 
 func (server *APIServer) SetupSwagger(swaggerURL string) {

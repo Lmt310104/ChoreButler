@@ -23,6 +23,7 @@ type Config struct {
 	MongoTimeout         time.Duration `mapstructure:"MONGO_TIMEOUT"`
 	BcryptCost           int           `mapstructure:"BCRYPT_COST"`
 	MongoDBName          string        `mapstructure:"MONGO_DB_NAME"`
+	SanctumSecretKey     string        `mapstructure:"SANCTUM_SECRET_KEY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

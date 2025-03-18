@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewDatabaseInstance(cfg utils.Config) *mongo.Client {
+func NewDatabaseInstance(cfg utils.Config) *mongo.Database {
 	_, cancel := context.WithTimeout(context.Background(), cfg.MongoTimeout)
 	defer cancel()
 	mongoDbConnection := cfg.MongoDBUri
@@ -25,8 +25,8 @@ func NewDatabaseInstance(cfg utils.Config) *mongo.Client {
 	if err := seedAdmin(mongoDB, cfg); err != nil {
 		log.Fatal().Err(err).Msg("Failed to seed admin user")
 	}
-	
-	return db
+
+	return mongoDB
 }
 func seedAdmin(db *mongo.Database, cfg utils.Config) error {
 	count, _ := db.Collection("users").CountDocuments(context.TODO(), bson.M{"email": "admin@gmail.com"})

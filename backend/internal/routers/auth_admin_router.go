@@ -1,11 +1,15 @@
 package routers
 
-import "github.com/gin-gonic/gin"
+import (
+	"chorebutler/internal/controller"
+	"github.com/gin-gonic/gin"
+)
 
 func SetupAuthAdminRouter(group *gin.RouterGroup, server *APIServer) {
-	group.POST("/login", func(context *gin.Context) {
-		context.JSON(200, gin.H{
-			"message": "Login",
-		})
-	})
+	authAdminController := controller.NewAuthAdminController(
+		server.Cfg,
+		server.Validate,
+		server.Service.AdminService,
+	)
+	group.POST("/login", authAdminController.Login)
 }

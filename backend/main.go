@@ -3,6 +3,8 @@ package main
 import (
 	"chorebutler/infrastructure/db"
 	"chorebutler/internal/routers"
+	"chorebutler/internal/service"
+	"chorebutler/pkg/sanctum"
 	"chorebutler/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
@@ -38,12 +40,22 @@ func main() {
 	utils.ConfigLogger(cfg)
 
 	// Initialize DB
-	db.NewDatabaseInstance(cfg)
+	database := db.NewDatabaseInstance(cfg)
+
+	// Initialize the token
+	cryptoSanctum := sanctum.NewCryptoSanctum(cfg)
+	tokenSanctum := sanctum.NewTokenSanctum(cryptoSanctum)
+	sanctumToken := sanctum.NewSanctumToken(tokenSanctum, cryptoSanctum, database)
+
+	// Initialize services using the service factory pattern (dependency injection also included repository pattern)
+	serviceFactory := service.NewServiceFactory(database, cfg, sanctumToken)
+	services := serviceFactory.CreateServices()
 
 	// Initialize API server
 	server, err := routers.NewApiServer(
 		validate,
-		cfg)
+		cfg,
+		services)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create API server")
 		return

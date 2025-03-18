@@ -1,11 +1,67 @@
 basePath: /api/v1
+definitions:
+  dtos.LoginAdminRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  response.ResponseData:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
   description: This is a sample server for ChoreButler API
   title: ChoreButler API
   version: "1.0"
-paths: {}
+paths:
+  /admin/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates an admin user and returns a token along with user
+        information
+      parameters:
+      - description: The login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.LoginAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "400":
+          description: Invalid request body or input validation failed
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+      summary: Login as an admin
+      tags:
+      - admin/auth
 securityDefinitions:
   BearerAuth:
     in: header
